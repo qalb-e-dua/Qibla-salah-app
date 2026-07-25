@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Al-Islam Ultimate Suite</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: #070A10;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px;
+            padding-bottom: 50px;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 440px;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 12px 18px;
+            border-radius: 16px;
+            margin-bottom: 15px;
+        }
+
+        .hijri-date {
+            font-size: 0.85rem;
+            color: #ffd700;
+            font-weight: 700;
+        }
+
+        .tab-nav {
+            display: flex;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px;
+            border-radius: 14px;
+            margin-bottom: 20px;
+            gap: 4px;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            flex: 1;
+            white-space: nowrap;
+            padding: 10px 12px;
+            border: none;
+            background: transparent;
+            color: #aaa;
+            font-weight: 600;
+            font-size: 0.75rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background: #ffd700;
+            color: #000;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 15px;
+        }
+
+        .hero-card {
+            background: linear-gradient(135deg, rgba(255,215,0,0.18) 0%, rgba(255,215,0,0.02) 100%);
+            border: 1px solid rgba(255, 215, 0, 0.35);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .hero-title {
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            color: #ffd700;
+            text-transform: uppercase;
+        }
+
+        .hero-time {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin: 5px 0;
+        }
+
+        .sun-arc-box {
+            position: relative;
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .arc-svg {
+            width: 100%;
+            height: 90px;
+        }
+
+        .prayer-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            margin-bottom: 8px;
+        }
+
+        .prayer-row.active {
+            background: rgba(255, 215, 0, 0.12);
+            border-color: rgba(255, 215, 0, 0.5);
+        }
+
+        .btn-action {
+            background: rgba(255, 215, 0, 0.15);
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            color: #ffd700;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .compass-section {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .compass-outer {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+        }
+
+        .qibla-needle {
+            position: absolute;
+            width: 6px;
+            height: 100px;
+            background: linear-gradient(to top, transparent, #ffd700);
+            top: 25px;
+            transform-origin: bottom center;
+        }
+
+        .surah-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 15px;
+            margin-bottom: 12px;
+        }
+
+        .arabic-text {
+            font-size: 1.4rem;
+            text-align: right;
+            color: #ffd700;
+            line-height: 1.8;
+            margin-bottom: 8px;
+            font-family: 'Traditional Arabic', serif;
+        }
+
+        .translation-text {
+            font-size: 0.85rem;
+            color: #ccc;
+            line-height: 1.4;
+        }
+
+        .tasbih-btn {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ffd700 0%, #b8860b 100%);
+            border: none;
+            color: #000;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin: 20px auto;
+            cursor: pointer;
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .names-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .name-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 12px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            background: #161b22;
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            margin-top: 6px;
+            margin-bottom: 12px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+
+        <div class="top-bar">
+            <div>
+                <div style="font-size: 0.9rem; font-weight: 700;" id="cityText">📍 Detecting GPS...</div>
+                <div style="font-size: 0.75rem; color: #aaa;" id="gregorianDate">--</div>
+            </div>
+            <div style="text-align: right;">
+                <div class="hijri-date" id="hijriDate">14 Sha'ban 1446 AH</div>
+                <div style="font-size: 0.75rem; color: #aaa;">🌔 Waxing Gibbous</div>
+            </div>
+        </div>
+
+        <div class="tab-nav">
+            <button class="tab-btn active" onclick="switchTab('salahTab', this)">🕌 Salah</button>
+            <button class="tab-btn" onclick="switchTab('qiblaTab', this)">🕋 Qibla</button>
+            <button class="tab-btn" onclick="switchTab('quranTab', this)">📖 Quran</button>
+            <button class="tab-btn" onclick="switchTab('tasbihTab', this)">📿 Dhikr</button>
+            <button class="tab-btn" onclick="switchTab('namesTab', this)">✨ 99 Names</button>
+            <button class="tab-btn" onclick="switchTab('zakatTab', this)">💰 Zakat</button>
+        </div>
+
+        <!-- TAB 1: SALAH -->
+        <div id="salahTab" class="tab-content active">
+            <div class="hero-card">
+                <div class="hero-title">NEXT PRAYER: <span id="nextPrayerName">DHUHR</span></div>
+                <div class="hero-time" id="nextPrayerTime">12:30 PM</div>
+                <div style="font-size: 0.8rem; color: #aaa;">Remaining: 01h 42m</div>
+            </div>
+
+            <div class="card">
+                <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; color: #ffd700; text-align: center; margin-bottom: 8px;">☀️ Solar Path Trajectory</div>
+                <div class="sun-arc-box">
+                    <svg class="arc-svg" viewBox="0 0 300 90">
+                        <path d="M 20 80 A 130 65 0 0 1 280 80" fill="none" stroke="rgba(255, 255, 255, 0.15)" stroke-width="3" stroke-dasharray="4,4"/>
+                        <circle id="sunIcon" cx="150" cy="20" r="8" fill="#ffd700"/>
+                        <line x1="10" y1="80" x2="290" y2="80" stroke="rgba(255, 255, 255, 0.2)" stroke-width="1"/>
+                        <text x="20" y="88" fill="#888" font-size="8">Fajr</text>
+                        <text x="138" y="88" fill="#ffd700" font-size="8">Dhuhr</text>
+                        <text x="255" y="88" fill="#888" font-size="8">Maghrib</text>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="prayer-row"><span>🌅 Fajr</span><span style="color:#ffd700; font-weight:bold;">05:12 AM</span><button class="btn-action" onclick="playAdhan()">🔊 Adhan</button></div>
+            <div class="prayer-row"><span>☀️ Sunrise</span><span style="color:#ffd700; font-weight:bold;">06:35 AM</span></div>
+            <div class="prayer-row active"><span>☀️ Dhuhr</span><span style="color:#ffd700; font-weight:bold;">12:30 PM</span><button class="btn-action" onclick="playAdhan()">🔊 Adhan</button></div>
+            <div class="prayer-row"><span>🌤️ Asr</span><span style="color:#ffd700; font-weight:bold;">03:45 PM</span><button class="btn-action" onclick="playAdhan()">🔊 Adhan</button></div>
+            <div class="prayer-row"><span>🌆 Maghrib</span><span style="color:#ffd700; font-weight:bold;">06:22 PM</span><button class="btn-action" onclick="playAdhan()">🔊 Adhan</button></div>
+            <div class="prayer-row"><span>🌙 Isha</span><span style="color:#ffd700; font-weight:bold;">07:45 PM</span><button class="btn-action" onclick="playAdhan()">🔊 Adhan</button></div>
+
+            <div style="font-size: 0.85rem; font-weight: 700; margin-top: 15px; margin-bottom: 8px; color: #4cd964;">VOLUNTARY & NIGHT TIMINGS</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <div class="card" style="padding: 10px; text-align: center;"><div style="font-size: 0.7rem; color: #888;">Imsak (Suhoor)</div><div style="font-weight: bold; color: #4cd964;">05:02 AM</div></div>
+                <div class="card" style="padding: 10px; text-align: center;"><div style="font-size: 0.7rem; color: #888;">Duha (Ishraq)</div><div style="font-weight: bold; color: #4cd964;">06:55 AM</div></div>
+                <div class="card" style="padding: 10px; text-align: center;"><div style="font-size: 0.7rem; color: #888;">Nisf al-Layl (Midnight)</div><div style="font-weight: bold; color: #4cd964;">12:08 AM</div></div>
+                <div class="card" style="padding: 10px; text-align: center;"><div style="font-size: 0.7rem; color: #888;">Tahajjud (Last 1/3)</div><div style="font-weight: bold; color: #4cd964;">02:30 AM</div></div>
+            </div>
+        </div>
+
+        <!-- TAB 2: QIBLA -->
+        <div id="qiblaTab" class="tab-content">
+            <div style="text-align: center; margin-bottom: 10px;">
+                <div style="font-size: 1.1rem; font-weight: 700;">Qibla Direction</div>
+                <div style="font-size: 0.8rem; color: #aaa;">Distance to Kaaba: <b style="color:#ffd700">4,520 km</b></div>
+            </div>
+
+            <div class="compass-section">
+                <div class="compass-outer">
+                    <div style="position: absolute; top: 10px; color: red; font-weight: bold;" id="northMark">N</div>
+                    <div class="qibla-needle" id="qiblaNeedle">
+                        <span style="position: absolute; top: -22px; left: -11px; font-size: 22px;">🕋</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="text-align: center;">
+                <div style="font-size: 0.85rem; color: #aaa;">Rotate MacBook Test Angle:</div>
+                <input type="range" min="0" max="360" value="0" oninput="rotatePreview(this.value)">
+            </div>
+        </div>
+
+        <!-- TAB 3: QURAN -->
+        <div id="quranTab" class="tab-content">
+            <div style="font-weight: 700; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+                <span>HOLY QURAN SELECTIONS</span>
+                <button class="btn-action" onclick="playQuranAudio()">▶️ Play Surah Al-Fatiha</button>
+            </div>
+
+            <div class="surah-card">
+                <div style="font-size: 0.8rem; color: #ffd700; margin-bottom: 6px;">Surah Al-Fatiha (The Opening)</div>
+                <div class="arabic-text">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ <br> الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ</div>
+                <div class="translation-text">In the name of Allah, the Most Gracious, the Most Merciful. All praise is due to Allah, Lord of the worlds.</div>
+            </div>
+
+            <div class="surah-card">
+                <div style="font-size: 0.8rem; color: #ffd700; margin-bottom: 6px;">Ayatul Kursi (Surah Al-Baqarah 2:255)</div>
+                <div class="arabic-text">اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ</div>
+                <div class="translation-text">Allah! There is no deity except Him, the Ever-Living, the Sustainer of all existence. Neither drowsiness overtakes Him nor sleep.</div>
+            </div>
+        </div>
+
+        <!-- TAB 4: DHIKR -->
+        <div id="tasbihTab" class="tab-content">
+            <div class="card" style="text-align: center;">
+                <div style="font-size: 0.8rem; color: #ffd700; letter-spacing: 1.5px;" id="dhikrTitle">SUBHANALLAH</div>
+                <div style="font-size: 1.8rem; margin: 10px 0; font-weight: bold;" id="dhikrArabic">سُبْحَانَ اللَّهِ</div>
+                <button class="tasbih-btn" onclick="countDhikr()" id="tasbihVal">0</button>
+                <div style="font-size: 0.85rem; color: #aaa;">Target: <span id="dhikrTarget">33</span></div>
+                <button class="btn-action" style="margin-top: 10px;" onclick="resetDhikr()">Reset Counter</button>
+            </div>
+        </div>
+
+        <!-- TAB 5: 99 NAMES -->
+        <div id="namesTab" class="tab-content">
+            <div style="font-weight: 700; margin-bottom: 12px;">ASMA UL-HUSNA (99 NAMES)</div>
+            <div class="names-grid">
+                <div class="name-card"><div style="color:#ffd700; font-size:1.2rem;">الرَّحْمَٰنُ</div><div style="font-weight:bold; font-size:0.85rem;">Ar-Rahman</div><div style="font-size:0.7rem; color:#aaa;">The Most Gracious</div></div>
+                <div class="name-card"><div style="color:#ffd700; font-size:1.2rem;">الرَّحِيمُ</div><div style="font-weight:bold; font-size:0.85rem;">Ar-Raheem</div><div style="font-size:0.7rem; color:#aaa;">The Most Merciful</div></div>
+                <div class="name-card"><div style="color:#ffd700; font-size:1.2rem;">الْمَلِكُ</div><div style="font-weight:bold; font-size:0.85rem;">Al-Malik</div><div style="font-size:0.7rem; color:#aaa;">The King / Sovereign</div></div>
+                <div class="name-card"><div style="color:#ffd700; font-size:1.2rem;">الْقُدُّوسُ</div><div style="font-weight:bold; font-size:0.85rem;">Al-Quddus</div><div style="font-size:0.7rem; color:#aaa;">The Most Holy</div></div>
+            </div>
+        </div>
+
+        <!-- TAB 6: ZAKAT -->
+        <div id="zakatTab" class="tab-content">
+            <div class="card">
+                <div style="font-weight: 700; margin-bottom: 10px; color:#ffd700;">💰 ZAKAT CALCULATOR (2.5%)</div>
+                <label style="font-size: 0.75rem; color: #aaa;">Cash Balance ($):</label>
+                <input type="number" id="cashVal" placeholder="0" oninput="calcZakat()">
+                <label style="font-size: 0.75rem; color: #aaa;">Gold & Silver Value ($):</label>
+                <input type="number" id="goldVal" placeholder="0" oninput="calcZakat()">
+                <div style="margin-top: 15px; padding: 12px; background: rgba(255,215,0,0.1); border-radius: 10px; text-align: center;">
+                    <div style="font-size: 0.8rem; color: #aaa;">Zakat Due:</div>
+                    <div style="font-size: 1.6rem; font-weight: 800; color: #ffd700;" id="zakatTotal">$0.00</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <audio id="adhanAudio" src="https://cdn.islamicfinder.org/static/audio/adhan/makkah.mp3"></audio>
+    <audio id="quranAudio" src="https://server8.mp3quran.net/afs/001.mp3"></audio>
+
+    <script>
+        function switchTab(tabId, btnElem) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            btnElem.classList.add('active');
+        }
+
+        function playAdhan() {
+            let a = document.getElementById('adhanAudio');
+            if(a.paused) { a.play(); alert("Playing Makkah Adhan 🔊"); } else { a.pause(); }
+        }
+
+        function playQuranAudio() {
+            let q = document.getElementById('quranAudio');
+            if(q.paused) { q.play(); alert("Playing Surah Al-Fatiha Recitation 📖"); } else { q.pause(); }
+        }
+
+        function rotatePreview(val) {
+            document.getElementById('northMark').style.transform = `rotate(${-val}deg)`;
+            let needleAngle = 118.5 - val;
+            document.getElementById('qiblaNeedle').style.transform = `rotate(${needleAngle}deg)`;
+        }
+
+        let count = 0, dhikrIndex = 0;
+        const dhikrs = [
+            { title: "SUBHANALLAH", arabic: "سُبْحَانَ اللَّهِ", target: 33 },
+            { title: "ALHAMDULILLAH", arabic: "الْحَمْدُ لِلَّهِ", target: 33 },
+            { title: "ALLAHU AKBAR", arabic: "اللَّهُ أَكْبَرُ", target: 34 }
+        ];
+
+        function countDhikr() {
+            count++;
+            if (navigator.vibrate) navigator.vibrate(40);
+            if (count >= dhikrs[dhikrIndex].target) {
+                count = 0;
+                dhikrIndex = (dhikrIndex + 1) % dhikrs.length;
+                document.getElementById('dhikrTitle').innerText = dhikrs[dhikrIndex].title;
+                document.getElementById('dhikrArabic').innerText = dhikrs[dhikrIndex].arabic;
+                document.getElementById('dhikrTarget').innerText = dhikrs[dhikrIndex].target;
+            }
+            document.getElementById('tasbihVal').innerText = count;
+        }
+
+        function resetDhikr() {
+            count = 0; dhikrIndex = 0;
+            document.getElementById('dhikrTitle').innerText = dhikrs[0].title;
+            document.getElementById('dhikrArabic').innerText = dhikrs[0].arabic;
+            document.getElementById('dhikrTarget').innerText = dhikrs[0].target;
+            document.getElementById('tasbihVal').innerText = "0";
+        }
+
+        function calcZakat() {
+            let cash = parseFloat(document.getElementById('cashVal').value) || 0;
+            let gold = parseFloat(document.getElementById('goldVal').value) || 0;
+            let net = Math.max(0, cash + gold);
+            document.getElementById('zakatTotal').innerText = "$" + (net * 0.025).toFixed(2);
+        }
+
+        const options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
+        document.getElementById('gregorianDate').innerText = new Date().toLocaleDateString('en-US', options);
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(p => {
+                document.getElementById('cityText').innerText = `📍 ${p.coords.latitude.toFixed(2)}°, ${p.coords.longitude.toFixed(2)}°`;
+            });
+        }
+    </script>
+</body>
+</html>
