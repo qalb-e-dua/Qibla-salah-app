@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Masjid e Ghosia - Master Suite</title>
+    <title>Al-Islam Suite - Bolton UK</title>
     <style>
         * {
             margin: 0;
@@ -192,6 +192,17 @@
             transition: transform 0.1s ease-out;
         }
 
+        .mosque-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
         .names-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -226,7 +237,6 @@
             height: 35px;
         }
 
-        /* Emergency Mode Banner */
         #emergencyBanner {
             display: none;
             position: fixed;
@@ -240,27 +250,27 @@
 </head>
 <body>
 
-    <!-- Emergency Mode Screen -->
+    <!-- Emergency Mode Overlay -->
     <div id="emergencyBanner">
         <h2 style="color: #ff453a; margin-bottom: 15px;">🚨 EMERGENCY SALAH MODE</h2>
         <div style="background: #111; padding: 20px; border-radius: 16px; border: 1px solid #ff453a; margin-bottom: 20px;">
             <div style="color: #ffd700; font-size: 1.2rem; font-weight: bold;">QIBLA ANGLE: 118.5° EAST</div>
             <div style="color: #fff; margin-top: 10px;">Zuhr / Asr / Isha: 4 Rak'ahs Fard</div>
-            <div style="color: #fff; margin-top: 5px;">Maghrib: 3 Rak'ahs Fard</div>
+            <div style="color: #fff; margin-top: 5px;">Maghrib: 3 Rak'ahs | Fajr: 2 Rak'ahs</div>
         </div>
         <button class="btn-action" style="padding: 12px 24px;" onclick="toggleEmergency(false)">Exit Emergency Mode</button>
     </div>
 
     <div class="app-container">
 
-        <!-- Top Header -->
+        <!-- Top Header Bar -->
         <div class="top-bar">
             <div>
-                <div style="font-size: 0.9rem; font-weight: 700;">📍 Masjid e Ghosia (Bolton, UK)</div>
+                <div style="font-size: 0.9rem; font-weight: 700;" id="activeMosqueTitle">📍 Masjid e Ghosia (Bolton)</div>
                 <div style="font-size: 0.75rem; color: #aaa;" id="liveClockText">--:--:--</div>
             </div>
             <div style="text-align: right;">
-                <div class="hijri-date">11 Safar 1448 AH</div>
+                <div class="hijri-date">12 Safar 1446 AH</div>
                 <button style="background: rgba(255,69,58,0.2); border: 1px solid #ff453a; color: #ff453a; border-radius: 6px; padding: 2px 6px; font-size: 0.65rem; margin-top: 2px; cursor: pointer;" onclick="toggleEmergency(true)">⚡ Emergency</button>
             </div>
         </div>
@@ -268,10 +278,9 @@
         <!-- Navigation Tabs -->
         <div class="tab-nav">
             <button class="tab-btn active" onclick="switchTab('salahTab', this)">🕌 Salah</button>
-            <button class="tab-btn" onclick="switchTab('timelineTab', this)">📅 Timeline</button>
+            <button class="tab-btn" onclick="switchTab('mosqueTab', this)">📍 4mi Mosques</button>
             <button class="tab-btn" onclick="switchTab('qiblaTab', this)">🕋 Qibla</button>
-            <button class="tab-btn" onclick="switchTab('roomsTab', this)">📍 Rooms</button>
-            <button class="tab-btn" onclick="switchTab('statsTab', this)">📊 Tracker</button>
+            <button class="tab-btn" onclick="switchTab('tasbihTab', this)">📿 Dhikr</button>
             <button class="tab-btn" onclick="switchTab('namesTab', this)">✨ 99 Names</button>
             <button class="tab-btn" onclick="switchTab('zakatTab', this)">💰 Zakat</button>
         </div>
@@ -282,7 +291,7 @@
             <!-- AI Assistant Banner -->
             <div style="background: rgba(255,215,0,0.08); border: 1px solid rgba(255,215,0,0.3); padding: 12px; border-radius: 12px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
                 <span style="font-size: 1.5rem;">🤖</span>
-                <div style="font-size: 0.75rem; color: #eee;" id="aiMessageText">Analysing time & location for Bolton, UK...</div>
+                <div style="font-size: 0.75rem; color: #eee;" id="aiMessageText">Live Timetable active for Bolton, UK...</div>
             </div>
 
             <div class="hero-card">
@@ -322,41 +331,4 @@
             </div>
 
             <div class="prayer-row" id="row-Maghrib">
-                <span style="text-align: left; font-weight:600;">🌆 Maghrib</span>
-                <span class="time-begins">09:20 PM</span>
-                <span class="time-jamah">09:20 PM</span>
-            </div>
-
-            <div class="prayer-row" id="row-Isha">
-                <span style="text-align: left; font-weight:600;">🌙 Isha</span>
-                <span class="time-begins">10:52 PM</span>
-                <span class="time-jamah">11:00 PM</span>
-            </div>
-
-            <div class="card" style="text-align: center; margin-top: 15px;">
-                <div style="font-size: 0.8rem; color: #ffd700; margin-bottom: 5px;">🔊 Makkah Adhan Recitation</div>
-                <audio controls>
-                    <source src="https://cdn.islamicfinder.org/static/audio/adhan/makkah.mp3" type="audio/mpeg">
-                </audio>
-            </div>
-        </div>
-
-        <!-- TAB 2: UNIFIED TIMELINE -->
-        <div id="timelineTab" class="tab-content">
-            <div style="font-weight: 700; margin-bottom: 12px; color: #ffd700;">📅 UNIFIED LIFE & SALAH TIMELINE</div>
-            <div class="card"><b style="color:#ffd700">01:16 AM</b> — Fajr Begins</div>
-            <div class="card"><b style="color:#34c759">04:50 AM</b> — Fajr Jamah</div>
-            <div class="card"><b style="color:#aaa">08:30 AM</b> — Work / School Start</div>
-            <div class="card"><b style="color:#ffd700">01:17 PM</b> — Zuhr Begins</div>
-            <div class="card"><b style="color:#34c759">01:30 PM</b> — Zuhr Jamah</div>
-            <div class="card"><b style="color:#ffd700">06:43 PM</b> — Asr Begins (Hanafi)</div>
-            <div class="card"><b style="color:#34c759">08:00 PM</b> — Asr Jamah</div>
-            <div class="card"><b style="color:#34c759">09:20 PM</b> — Maghrib Jamah</div>
-            <div class="card"><b style="color:#34c759">11:00 PM</b> — Isha Jamah</div>
-        </div>
-
-        <!-- TAB 3: QIBLA COMPASS -->
-        <div id="qiblaTab" class="tab-content">
-            <div style="text-align: center;">
-                <div style="font-weight:700;">Qibla Compass</div>
-                <button class="btn-action" style="width:100%; margin:10px 0;" onclick="enableCompassSensor()">🧭 Enable iPho
+                <span style="text-align: left; font-weight:600;">
