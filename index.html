@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Al-Islam Next-Gen Suite</title>
+    <title>Masjid e Ghosia - Master Suite</title>
     <style>
         * {
             margin: 0;
@@ -112,7 +112,6 @@
             margin: 5px 0;
         }
 
-        /* Mosque Timetable Row */
         .prayer-row {
             display: grid;
             grid-template-columns: 1.2fr 1fr 1fr;
@@ -134,8 +133,8 @@
         }
 
         .prayer-row.active {
-            background: rgba(52, 199, 89, 0.15);
-            border-color: #34c759;
+            background: rgba(52, 199, 89, 0.2) !important;
+            border-color: #34c759 !important;
         }
 
         .time-begins {
@@ -161,7 +160,6 @@
             font-weight: 600;
         }
 
-        /* Compass Elements */
         .compass-section {
             position: relative;
             width: 240px;
@@ -194,33 +192,13 @@
             transition: transform 0.1s ease-out;
         }
 
-        /* 3D Canvas */
-        #skyCanvas {
-            width: 100%;
-            height: 180px;
-            background: #000;
-            border-radius: 14px;
-            margin: 10px 0;
-        }
-
-        /* Mosque Finder Card */
-        .mosque-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
-            padding: 14px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
         .names-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
             max-height: 480px;
             overflow-y: auto;
+            padding-right: 5px;
         }
 
         .name-card {
@@ -248,68 +226,69 @@
             height: 35px;
         }
 
-        .metric-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            margin-top: 10px;
-        }
-
-        .metric-box {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.06);
-            padding: 10px;
-            border-radius: 10px;
+        /* Emergency Mode Banner */
+        #emergencyBanner {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: #000000;
+            z-index: 99999;
+            padding: 25px;
             text-align: center;
-        }
-
-        .check-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px;
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 10px;
-            margin-bottom: 8px;
         }
     </style>
 </head>
 <body>
 
+    <!-- Emergency Mode Screen -->
+    <div id="emergencyBanner">
+        <h2 style="color: #ff453a; margin-bottom: 15px;">🚨 EMERGENCY SALAH MODE</h2>
+        <div style="background: #111; padding: 20px; border-radius: 16px; border: 1px solid #ff453a; margin-bottom: 20px;">
+            <div style="color: #ffd700; font-size: 1.2rem; font-weight: bold;">QIBLA ANGLE: 118.5° EAST</div>
+            <div style="color: #fff; margin-top: 10px;">Zuhr / Asr / Isha: 4 Rak'ahs Fard</div>
+            <div style="color: #fff; margin-top: 5px;">Maghrib: 3 Rak'ahs Fard</div>
+        </div>
+        <button class="btn-action" style="padding: 12px 24px;" onclick="toggleEmergency(false)">Exit Emergency Mode</button>
+    </div>
+
     <div class="app-container">
 
-        <!-- Header -->
+        <!-- Top Header -->
         <div class="top-bar">
             <div>
-                <div style="font-size: 0.9rem; font-weight: 700;" id="cityText">📍 Bolton, United Kingdom</div>
-                <div style="font-size: 0.75rem; color: #aaa;" id="gregorianDate">--</div>
+                <div style="font-size: 0.9rem; font-weight: 700;">📍 Masjid e Ghosia (Bolton, UK)</div>
+                <div style="font-size: 0.75rem; color: #aaa;" id="liveClockText">--:--:--</div>
             </div>
             <div style="text-align: right;">
                 <div class="hijri-date">11 Safar 1448 AH</div>
-                <div style="font-size: 0.7rem; color: #34c759;" id="travelBadge">🟢 Local Mode (Home)</div>
+                <button style="background: rgba(255,69,58,0.2); border: 1px solid #ff453a; color: #ff453a; border-radius: 6px; padding: 2px 6px; font-size: 0.65rem; margin-top: 2px; cursor: pointer;" onclick="toggleEmergency(true)">⚡ Emergency</button>
             </div>
         </div>
 
         <!-- Navigation Tabs -->
         <div class="tab-nav">
             <button class="tab-btn active" onclick="switchTab('salahTab', this)">🕌 Salah</button>
-            <button class="tab-btn" onclick="switchTab('mosqueTab', this)">📍 Mosques</button>
-            <button class="tab-btn" onclick="switchTab('travelTab', this)">✈️ Travel</button>
+            <button class="tab-btn" onclick="switchTab('timelineTab', this)">📅 Timeline</button>
             <button class="tab-btn" onclick="switchTab('qiblaTab', this)">🕋 Qibla</button>
-            <button class="tab-btn" onclick="switchTab('skyTab', this)">🌌 Sky 3D</button>
+            <button class="tab-btn" onclick="switchTab('roomsTab', this)">📍 Rooms</button>
             <button class="tab-btn" onclick="switchTab('statsTab', this)">📊 Tracker</button>
             <button class="tab-btn" onclick="switchTab('namesTab', this)">✨ 99 Names</button>
             <button class="tab-btn" onclick="switchTab('zakatTab', this)">💰 Zakat</button>
         </div>
 
-        <!-- TAB 1: SALAH (MASJID E GHOSIA) -->
+        <!-- TAB 1: SALAH DASHBOARD -->
         <div id="salahTab" class="tab-content active">
 
+            <!-- AI Assistant Banner -->
+            <div style="background: rgba(255,215,0,0.08); border: 1px solid rgba(255,215,0,0.3); padding: 12px; border-radius: 12px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 1.5rem;">🤖</span>
+                <div style="font-size: 0.75rem; color: #eee;" id="aiMessageText">Analysing time & location for Bolton, UK...</div>
+            </div>
+
             <div class="hero-card">
-                <div class="hero-title">NEXT PRAYER JAMAH: <span id="nextPrayerName">FAJR</span></div>
-                <div class="hero-time" id="nextPrayerTime">04:50 AM</div>
-                <div style="font-size: 0.8rem; color: #aaa;">Sunrise: 05:15 AM | Hanafi Timetable</div>
+                <div class="hero-title">NEXT PRAYER JAMAH: <span id="nextPrayerName">ZUHR</span></div>
+                <div class="hero-time" id="nextPrayerTime">01:30 PM</div>
+                <div style="font-size: 0.85rem; color: #ffd700; font-weight: 700;" id="countdownText">Remaining: Calculating...</div>
             </div>
 
             <div class="prayer-row header-row">
@@ -318,46 +297,40 @@
                 <div>JAMAH</div>
             </div>
 
-            <div class="prayer-row active">
+            <div class="prayer-row" id="row-Fajr">
                 <span style="text-align: left; font-weight:600;">🌅 Fajr</span>
                 <span class="time-begins">01:16 AM</span>
                 <span class="time-jamah">04:50 AM</span>
             </div>
 
-            <div class="prayer-row">
+            <div class="prayer-row" id="row-Sunrise">
                 <span style="text-align: left; font-weight:600;">☀️ Sunrise</span>
                 <span class="time-begins">05:15 AM</span>
                 <span class="time-jamah">--</span>
             </div>
 
-            <div class="prayer-row">
+            <div class="prayer-row" id="row-Zuhr">
                 <span style="text-align: left; font-weight:600;">☀️ Zuhr</span>
                 <span class="time-begins">01:17 PM</span>
                 <span class="time-jamah">01:30 PM</span>
             </div>
 
-            <div class="prayer-row">
+            <div class="prayer-row" id="row-Asr">
                 <span style="text-align: left; font-weight:600;">🌤️ Asr (Hanafi)</span>
                 <span class="time-begins">06:43 PM</span>
                 <span class="time-jamah">08:00 PM</span>
             </div>
 
-            <div class="prayer-row">
+            <div class="prayer-row" id="row-Maghrib">
                 <span style="text-align: left; font-weight:600;">🌆 Maghrib</span>
                 <span class="time-begins">09:20 PM</span>
                 <span class="time-jamah">09:20 PM</span>
             </div>
 
-            <div class="prayer-row">
+            <div class="prayer-row" id="row-Isha">
                 <span style="text-align: left; font-weight:600;">🌙 Isha</span>
                 <span class="time-begins">10:52 PM</span>
                 <span class="time-jamah">11:00 PM</span>
-            </div>
-
-            <div class="prayer-row">
-                <span style="text-align: left; font-weight:600;">🕌 Jumu'ah</span>
-                <span class="time-begins">01:16 PM</span>
-                <span class="time-jamah">02:00 PM</span>
             </div>
 
             <div class="card" style="text-align: center; margin-top: 15px;">
@@ -368,366 +341,22 @@
             </div>
         </div>
 
-        <!-- TAB 2: LIVE MOSQUE FINDER -->
-        <div id="mosqueTab" class="tab-content">
-            <div style="font-weight: 700; margin-bottom: 10px;">📍 NEARBY SUNNI MOSQUES</div>
-            <button class="btn-action" style="width: 100%; margin-bottom: 15px;" onclick="findNearbyMosques()">🔍 Scan GPS for Mosques Near Me</button>
-            <div id="mosqueList">
-                <div class="mosque-card">
-                    <div>
-                        <div style="font-weight: 700;">Masjid e Ghosia</div>
-                        <div style="font-size: 0.75rem; color: #aaa;">Caroline St, Bolton BL3 6GF</div>
-                        <div style="font-size: 0.7rem; color: #34c759; margin-top: 2px;">Jummah: 02:00 PM & 03:30 PM</div>
-                    </div>
-                    <button class="btn-action" onclick="window.open('https://maps.google.com/?q=Masjid+e+Ghosia+Bolton')">Directions</button>
-                </div>
-                <div class="mosque-card">
-                    <div>
-                        <div style="font-weight: 700;">Zakariyya Jaam'e Masjid</div>
-                        <div style="font-size: 0.75rem; color: #aaa;">Peace St, Bolton BL3 5L2</div>
-                        <div style="font-size: 0.7rem; color: #aaa; margin-top: 2px;">0.7 miles away</div>
-                    </div>
-                    <button class="btn-action" onclick="window.open('https://maps.google.com/?q=Zakariyya+Masjid+Bolton')">Directions</button>
-                </div>
-            </div>
+        <!-- TAB 2: UNIFIED TIMELINE -->
+        <div id="timelineTab" class="tab-content">
+            <div style="font-weight: 700; margin-bottom: 12px; color: #ffd700;">📅 UNIFIED LIFE & SALAH TIMELINE</div>
+            <div class="card"><b style="color:#ffd700">01:16 AM</b> — Fajr Begins</div>
+            <div class="card"><b style="color:#34c759">04:50 AM</b> — Fajr Jamah</div>
+            <div class="card"><b style="color:#aaa">08:30 AM</b> — Work / School Start</div>
+            <div class="card"><b style="color:#ffd700">01:17 PM</b> — Zuhr Begins</div>
+            <div class="card"><b style="color:#34c759">01:30 PM</b> — Zuhr Jamah</div>
+            <div class="card"><b style="color:#ffd700">06:43 PM</b> — Asr Begins (Hanafi)</div>
+            <div class="card"><b style="color:#34c759">08:00 PM</b> — Asr Jamah</div>
+            <div class="card"><b style="color:#34c759">09:20 PM</b> — Maghrib Jamah</div>
+            <div class="card"><b style="color:#34c759">11:00 PM</b> — Isha Jamah</div>
         </div>
 
-        <!-- TAB 3: SMART TRAVEL MODE (QASR) -->
-        <div id="travelTab" class="tab-content">
-            <div class="card">
-                <div style="font-weight: 700; color: #ffd700; margin-bottom: 8px;">✈️ SMART TRAVEL & QASR CALCULATOR</div>
-                <div style="font-size: 0.8rem; color: #ccc; line-height: 1.4; margin-bottom: 12px;">
-                    When travelling <b>48+ miles (80 km)</b> outside your home city (Bolton), Shariah permits <b>Qasr (Shortening Prayers)</b>.
-                </div>
-
-                <label style="font-size: 0.75rem; color: #aaa;">Distance from Home (Miles):</label>
-                <input type="number" id="travelDistInput" placeholder="e.g. 55" oninput="checkTravelMode()">
-
-                <div id="travelStatusResult" style="padding: 12px; background: rgba(255,215,0,0.1); border-radius: 10px; margin-top: 10px;">
-                    <div style="font-weight: 700; font-size: 0.9rem;" id="qasrTitle">🏠 Local Mode (Bolton)</div>
-                    <div style="font-size: 0.75rem; color: #aaa; margin-top: 4px;" id="qasrDesc">Full 4 Rak'ahs apply for Zuhr, Asr, and Isha.</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- TAB 4: ADVANCED QIBLA & COMPASS METRICS -->
+        <!-- TAB 3: QIBLA COMPASS -->
         <div id="qiblaTab" class="tab-content">
-            <div style="text-align: center; margin-bottom: 10px;">
-                <div style="font-size: 1.1rem; font-weight: 700;">Advanced Qibla Compass</div>
-                <div style="font-size: 0.8rem; color: #aaa;">Distance to Kaaba: <b style="color:#ffd700">4,520 km</b></div>
-            </div>
-
-            <button class="btn-action" style="width: 100%; margin-bottom: 10px;" onclick="enableCompassSensor()">🧭 Activate Sensor Fusion</button>
-
-            <div class="compass-section">
-                <div class="compass-outer">
-                    <div style="position: absolute; top: 10px; color: red; font-weight: bold;" id="northMark">N</div>
-                    <div class="qibla-needle" id="qiblaNeedle">
-                        <span style="position: absolute; top: -22px; left: -11px; font-size: 22px;">🕋</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Compass Metrics Grid -->
-            <div class="metric-grid">
-                <div class="metric-box"><div style="font-size:0.7rem; color:#888;">True North Angle</div><div style="font-weight:bold; color:#ffd700;">118.5°</div></div>
-                <div class="metric-box"><div style="font-size:0.7rem; color:#888;">Magnetic North</div><div style="font-weight:bold; color:#ffd700;">120.1°</div></div>
-                <div class="metric-box"><div style="font-size:0.7rem; color:#888;">GPS Precision</div><div style="font-weight:bold; color:#34c759;">±3.2 Meters</div></div>
-                <div class="metric-box"><div style="font-size:0.7rem; color:#888;">Altitude</div><div style="font-weight:bold; color:#34c759;">92 Meters</div></div>
-            </div>
-        </div>
-
-        <!-- TAB 5: 3D SKY VIEW & GLOBE -->
-        <div id="skyTab" class="tab-content">
-            <div class="card" style="text-align: center;">
-                <div style="font-weight: 700; color: #ffd700; margin-bottom: 6px;">🌌 3D SKY & ASTRONOMICAL TRAJECTORY</div>
-                <canvas id="skyCanvas"></canvas>
-                <div class="metric-grid">
-                    <div class="metric-box"><div style="font-size:0.7rem; color:#888;">Sun Elevation</div><div style="font-weight:bold; color:#ffd700;">-14.2° (Night)</div></div>
-                    <div class="metric-box"><div style="font-size:0.7rem; color:#888;">Golden Hour</div><div style="font-weight:bold; color:#ffd700;">08:35 PM</div></div>
-                    <div class="metric-box"><div style="font-size:0.7rem; color:#888;">Blue Hour</div><div style="font-weight:bold; color:#4cd964;">09:05 PM</div></div>
-                    <div class="metric-box"><div style="font-size:0.7rem; color:#888;">Moon Phase</div><div style="font-weight:bold; color:#4cd964;">Waxing Gibbous</div></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- TAB 6: PRAYER TRACKER & ANALYTICS -->
-        <div id="statsTab" class="tab-content">
-            <div class="card">
-                <div style="font-weight: 700; color: #ffd700; margin-bottom: 10px;">📊 DAILY PRAYER TRACKER</div>
-                <div class="check-item"><span>🌅 Fajr</span><input type="checkbox" onchange="updateStreak()" style="width:20px; height:20px;"></div>
-                <div class="check-item"><span>☀️ Zuhr</span><input type="checkbox" onchange="updateStreak()" style="width:20px; height:20px;"></div>
-                <div class="check-item"><span>🌤️ Asr</span><input type="checkbox" onchange="updateStreak()" style="width:20px; height:20px;"></div>
-                <div class="check-item"><span>🌆 Maghrib</span><input type="checkbox" onchange="updateStreak()" style="width:20px; height:20px;"></div>
-                <div class="check-item"><span>🌙 Isha</span><input type="checkbox" onchange="updateStreak()" style="width:20px; height:20px;"></div>
-
-                <div class="metric-grid" style="margin-top: 15px;">
-                    <div class="metric-box"><div style="font-size:0.7rem; color:#888;">Current Streak</div><div style="font-weight:bold; color:#ffd700;" id="streakVal">7 Days 🔥</div></div>
-                    <div class="metric-box"><div style="font-size:0.7rem; color:#888;">On-Time %</div><div style="font-weight:bold; color:#34c759;">96%</div></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- TAB 7: ALL 99 NAMES OF ALLAH -->
-        <div id="namesTab" class="tab-content">
-            <div style="font-weight: 700; margin-bottom: 12px;">ASMA UL-HUSNA (ALL 99 NAMES OF ALLAH)</div>
-            <div class="names-grid" id="namesContainer"></div>
-        </div>
-
-        <!-- TAB 8: GOLD GRAMS & £ GBP ZAKAT CALCULATOR -->
-        <div id="zakatTab" class="tab-content">
-            <div class="card">
-                <div style="font-weight: 700; margin-bottom: 10px; color:#ffd700;">💰 GOLD & SILVER ZAKAT CALCULATOR (£ GBP)</div>
-                <label style="font-size: 0.75rem; color: #aaa;">Gold Weight in Grams (g):</label>
-                <input type="number" id="goldGrams" placeholder="e.g. 10 or 85 grams" oninput="calcGoldZakat()">
-                <label style="font-size: 0.75rem; color: #aaa;">Gold Price per Gram (£):</label>
-                <input type="number" id="goldRate" value="68" oninput="calcGoldZakat()">
-                <label style="font-size: 0.75rem; color: #aaa;">Cash Balance (£):</label>
-                <input type="number" id="cashVal" placeholder="0" oninput="calcGoldZakat()">
-                <div style="margin-top: 15px; padding: 12px; background: rgba(255,215,0,0.1); border-radius: 10px; text-align: center;">
-                    <div style="font-size: 0.8rem; color: #aaa;">Total Gold Value: <b style="color:#fff" id="goldTotalVal">£0.00</b></div>
-                    <div style="font-size: 0.8rem; color: #aaa; margin-top:4px;">Total Zakat Due (2.5%):</div>
-                    <div style="font-size: 1.6rem; font-weight: 800; color: #ffd700;" id="zakatTotal">£0.00</div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <script>
-        let calculatedQiblaAngle = 118.5;
-
-        function switchTab(tabId, btnElem) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            btnElem.classList.add('active');
-            if(tabId === 'skyTab') renderSkyCanvas();
-        }
-
-        function enableCompassSensor() {
-            if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-                DeviceOrientationEvent.requestPermission().then(permissionState => {
-                    if (permissionState === 'granted') {
-                        window.addEventListener('deviceorientation', handleOrientation, true);
-                        alert("Sensor Fusion Active!");
-                    }
-                }).catch(console.error);
-            } else {
-                window.addEventListener('deviceorientationabsolute', handleOrientation, true) ||
-                window.addEventListener('deviceorientation', handleOrientation, true);
-                alert("Sensors Active!");
-            }
-        }
-
-        function handleOrientation(e) {
-            let heading = e.webkitCompassHeading || (360 - e.alpha);
-            if (heading) {
-                document.getElementById('northMark').style.transform = `rotate(${-heading}deg)`;
-                let needleAngle = calculatedQiblaAngle - heading;
-                document.getElementById('qiblaNeedle').style.transform = `rotate(${needleAngle}deg)`;
-            }
-        }
-
-        function checkTravelMode() {
-            let dist = parseFloat(document.getElementById('travelDistInput').value) || 0;
-            let title = document.getElementById('qasrTitle');
-            let desc = document.getElementById('qasrDesc');
-            let badge = document.getElementById('travelBadge');
-
-            if(dist >= 48) {
-                title.innerText = "✈️ TRAVEL MODE ACTIVE (QASR APPLIES)";
-                title.style.color = "#ffd700";
-                desc.innerHTML = "You are travelling 48+ miles. Shorten 4-Rak'ah prayers (Zuhr, Asr, Isha) to <b>2 Rak'ahs</b>. You may also combine Zuhr+Asr and Maghrib+Isha.";
-                badge.innerText = "✈️ Travel Mode (Qasr)";
-                badge.style.color = "#ffd700";
-            } else {
-                title.innerText = "🏠 Local Mode (Bolton)";
-                title.style.color = "#ffffff";
-                desc.innerText = "Full 4 Rak'ahs apply for Zuhr, Asr, and Isha.";
-                badge.innerText = "🟢 Local Mode (Home)";
-                badge.style.color = "#34c759";
-            }
-        }
-
-        function findNearbyMosques() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(p => {
-                    let lat = p.coords.latitude;
-                    let lng = p.coords.longitude;
-                    fetch(`https://overpass-api.de/api/interpreter?data=[out:json];node(around:5000,${lat},${lng})[amenity=place_of_worship][religion=muslim];out;`)
-                        .then(res => res.json())
-                        .then(data => {
-                            let list = document.getElementById('mosqueList');
-                            if(data.elements && data.elements.length > 0) {
-                                list.innerHTML = "";
-                                data.elements.slice(0, 5).forEach(m => {
-                                    let name = m.tags.name || "Local Mosque";
-                                    list.innerHTML += `
-                                        <div class="mosque-card">
-                                            <div>
-                                                <div style="font-weight:700;">${name}</div>
-                                                <div style="font-size:0.75rem; color:#aaa;">Nearby Local Area</div>
-                                            </div>
-                                            <button class="btn-action" onclick="window.open('https://maps.google.com/?q=${lat},${lng}')">Directions</button>
-                                        </div>`;
-                                });
-                            }
-                        }).catch(() => alert("Scan complete. Showing local Bolton Mosques."));
-                });
-            }
-        }
-
-        function renderSkyCanvas() {
-            const canvas = document.getElementById('skyCanvas');
-            if(!canvas) return;
-            const ctx = canvas.getContext('2d');
-            canvas.width = canvas.offsetWidth;
-            canvas.height = canvas.offsetHeight;
-
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.strokeStyle = "rgba(255, 215, 0, 0.4)";
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.arc(canvas.width / 2, canvas.height + 20, 100, Math.PI, 0, false);
-            ctx.stroke();
-
-            // Draw Sun
-            ctx.fillStyle = "#ffd700";
-            ctx.beginPath();
-            ctx.arc(canvas.width / 2, canvas.height - 80, 8, 0, Math.PI * 2);
-            ctx.fill();
-        }
-
-        function calcGoldZakat() {
-            let grams = parseFloat(document.getElementById('goldGrams').value) || 0;
-            let rate = parseFloat(document.getElementById('goldRate').value) || 68;
-            let cash = parseFloat(document.getElementById('cashVal').value) || 0;
-            let totalGoldVal = grams * rate;
-            let netWealth = totalGoldVal + cash;
-            document.getElementById('goldTotalVal').innerText = "£" + totalGoldVal.toFixed(2);
-            document.getElementById('zakatTotal').innerText = "£" + (netWealth * 0.025).toFixed(2);
-        }
-
-        function updateStreak() {
-            document.getElementById('streakVal').innerText = "8 Days 🔥";
-        }
-
-        // FULL ALL 99 NAMES OF ALLAH
-        const full99Names = [
-            { ar: "الرَّحْمَٰنُ", en: "1. Ar-Rahman", m: "The Most Gracious" },
-            { ar: "الرَّحِيمُ", en: "2. Ar-Raheem", m: "The Most Merciful" },
-            { ar: "الْمَلِكُ", en: "3. Al-Malik", m: "The King / Sovereign" },
-            { ar: "الْقُدُّوسُ", en: "4. Al-Quddus", m: "The Most Holy" },
-            { ar: "السَّلَامُ", en: "5. As-Salam", m: "The Source of Peace" },
-            { ar: "الْمُؤْمِنُ", en: "6. Al-Mu'min", m: "The Giver of Faith" },
-            { ar: "الْمُهَيْمِنُ", en: "7. Al-Muhaymin", m: "The Guardian" },
-            { ar: "الْعَزِيزُ", en: "8. Al-Aziz", m: "The Almighty" },
-            { ar: "الْجَبَّارُ", en: "9. Al-Jabbar", m: "The Compeller" },
-            { ar: "الْمُتَكَبِّرُ", en: "10. Al-Mutakabbir", m: "The Supreme" },
-            { ar: "الْخَالِقُ", en: "11. Al-Khaliq", m: "The Creator" },
-            { ar: "الْبَارِئُ", en: "12. Al-Bari", m: "The Maker" },
-            { ar: "الْمُصَوِّرُ", en: "13. Al-Musawwir", m: "The Fashioner" },
-            { ar: "الْغَفَّارُ", en: "14. Al-Ghaffar", m: "The Great Forgiver" },
-            { ar: "الْقَهَّارُ", en: "15. Al-Qahhar", m: "The Subduer" },
-            { ar: "الْوَهَّابُ", en: "16. Al-Wahhab", m: "The Bestower" },
-            { ar: "الرَّزَّاقُ", en: "17. Ar-Razzaq", m: "The Provider" },
-            { ar: "الْفَتَّاحُ", en: "18. Al-Fattah", m: "The Opener" },
-            { ar: "الْعَلِيمُ", en: "19. Al-Alim", m: "The All-Knowing" },
-            { ar: "الْقَابِضُ", en: "20. Al-Qabid", m: "The Withholder" },
-            { ar: "الْبَاسِطُ", en: "21. Al-Basit", m: "The Extender" },
-            { ar: "الْخَافِضُ", en: "22. Al-Khafid", m: "The Reducer" },
-            { ar: "الرَّافِعُ", en: "23. Ar-Rafi", m: "The Exalter" },
-            { ar: "الْمُعِزُّ", en: "24. Al-Mu'izz", m: "The Honourer" },
-            { ar: "الْمُذِلُّ", en: "25. Al-Mudhill", m: "The Humiliator" },
-            { ar: "السَّمِيعُ", en: "26. As-Sami", m: "The All-Hearing" },
-            { ar: "الْبَصِيرُ", en: "27. Al-Basir", m: "The All-Seeing" },
-            { ar: "الْحَكَمُ", en: "28. Al-Hakam", m: "The Judge" },
-            { ar: "الْعَدْلُ", en: "29. Al-Adl", m: "The Utterly Just" },
-            { ar: "الَّطِيفُ", en: "30. Al-Latif", m: "The Subtle One" },
-            { ar: "الْخَبِيرُ", en: "31. Al-Khabir", m: "The All-Aware" },
-            { ar: "الْحَلِيمُ", en: "32. Al-Halim", m: "The Most Forbearing" },
-            { ar: "الْعَظِيمُ", en: "33. Al-Azeem", m: "The Magnificent" },
-            { ar: "الْغَفُورُ", en: "34. Al-Ghafoor", m: "The Forgiving" },
-            { ar: "الشَّكُورُ", en: "35. Ash-Shakoor", m: "The Most Appreciative" },
-            { ar: "الْعَلِيُّ", en: "36. Al-Ali", m: "The Most High" },
-            { ar: "الْكَبِيرُ", en: "37. Al-Kabir", m: "The Most Great" },
-            { ar: "الْحَفِيظُ", en: "38. Al-Hafiz", m: "The Preserver" },
-            { ar: "الْمُقِيتُ", en: "39. Al-Muqit", m: "The Sustainer" },
-            { ar: "الْحَسِيبُ", en: "40. Al-Haseeb", m: "The Reckoner" },
-            { ar: "الْجَلِيلُ", en: "41. Al-Jaleel", m: "The Majestic" },
-            { ar: "الْكَرِيمُ", en: "42. Al-Kareem", m: "The Most Generous" },
-            { ar: "الرَّقِيبُ", en: "43. Ar-Raqeeb", m: "The Watchful" },
-            { ar: "الْمُجِيبُ", en: "44. Al-Mujeeb", m: "The Responsive" },
-            { ar: "الْوَاسِعُ", en: "45. Al-Wasi", m: "The All-Encompassing" },
-            { ar: "الْحَكِيمُ", en: "46. Al-Hakeem", m: "The All-Wise" },
-            { ar: "الْمَجِيدُ", en: "48. Al-Majeed", m: "The Glorious" },
-            { ar: "الْبَاعِثُ", en: "49. Al-Ba'ith", m: "The Resurrecter" },
-            { ar: "الشَّهِيدُ", en: "50. Ash-Shaheed", m: "The All-Witnessing" },
-            { ar: "الْحَقُّ", en: "51. Al-Haqq", m: "The Absolute Truth" },
-            { ar: "الْوَكِيلُ", en: "52. Al-Wakeel", m: "The Trustee" },
-            { ar: "الْقَوِيُّ", en: "53. Al-Qawiyy", m: "The All-Strong" },
-            { ar: "الْمَتِينُ", en: "54. Al-Mateen", m: "The Firm One" },
-            { ar: "الْوَلِيُّ", en: "55. Al-Waliyy", m: "The Protecting Associate" },
-            { ar: "الْحَمِيدُ", en: "56. Al-Hameed", m: "The Praiseworthy" },
-            { ar: "الْمُحْصِي", en: "57. Al-Muhsi", m: "The All-Enumerating" },
-            { ar: "الْمُبْدِئُ", en: "58. Al-Mubdi", m: "The Originator" },
-            { ar: "الْمُعِيدُ", en: "59. Al-Mu'id", m: "The Restorer" },
-            { ar: "الْمُحْيِي", en: "60. Al-Muhyi", m: "The Giver of Life" },
-            { ar: "الْمُمِيتُ", en: "61. Al-Mumeet", m: "The Bringer of Death" },
-            { ar: "الْحَيُّ", en: "62. Al-Hayyu", m: "The Ever-Living" },
-            { ar: "الْقَيُّومُ", en: "63. Al-Qayyoom", m: "The Sustainer" },
-            { ar: "الْوَاجِدُ", en: "64. Al-Wajid", m: "The Perceiver" },
-            { ar: "الْمَاجِدُ", en: "65. Al-Majid", m: "The Illustrious" },
-            { ar: "الْوَاحِدُ", en: "66. Al-Wahid", m: "The One" },
-            { ar: "الأَحَدُ", en: "67. Al-Ahad", m: "The Unique" },
-            { ar: "الصَّمَدُ", en: "68. As-Samad", m: "The Eternal Refuge" },
-            { ar: "الْقَادِرُ", en: "69. Al-Qadir", m: "The Capable" },
-            { ar: "الْمُقْتَدِرُ", en: "70. Al-Muqtadir", m: "The Omnipotent" },
-            { ar: "الْمُقَدِّمُ", en: "71. Al-Muqaddim", m: "The Expediter" },
-            { ar: "الْمُؤَخِّرُ", en: "72. Al-Mu'akhkhir", m: "The Delayer" },
-            { ar: "الأَوَّلُ", en: "73. Al-Awwal", m: "The First" },
-            { ar: "الأَخِرُ", en: "74. Al-Akhir", m: "The Last" },
-            { ar: "الظَّاهِرُ", en: "75. Az-Zahir", m: "The Manifest" },
-            { ar: "الْبَاطِنُ", en: "76. Al-Batin", m: "The Hidden" },
-            { ar: "الْوَالِي", en: "77. Al-Wali", m: "The Governor" },
-            { ar: "الْمُتَعَالِي", en: "78. Al-Muta'ali", m: "The Self-Exalted" },
-            { ar: "الْبَرُّ", en: "79. Al-Barr", m: "The Source of All Goodness" },
-            { ar: "التَّوَّابُ", en: "80. At-Tawwab", m: "The Ever-Pardoning" },
-            { ar: "الْمُنْتَقِمُ", en: "81. Al-Muntaqim", m: "The Avenger" },
-            { ar: "العَفُوُّ", en: "82. Al-Afuww", m: "The Pardoner" },
-            { ar: "الرَّؤُوفُ", en: "83. Ar-Ra'oof", m: "The Most Kind" },
-            { ar: "مَالِكُ الْمُلْكِ", en: "84. Malik-ul-Mulk", m: "Master of the Kingdom" },
-            { ar: "ذُو الْجَلَالِ وَالإِكْرَامِ", en: "85. Dhul-Jalali wal-Ikram", m: "Lord of Majesty and Honour" },
-            { ar: "الْمُقْسِطُ", en: "86. Al-Muqsit", m: "The Equitable" },
-            { ar: "الْجَامِعُ", en: "87. Al-Jami", m: "The Gatherer" },
-            { ar: "الْغَنِيُّ", en: "88. Al-Ghaniyy", m: "The Self-Sufficient" },
-            { ar: "الْمُغْنِي", en: "89. Al-Mughni", m: "The Enricher" },
-            { ar: "الْمَانِعُ", en: "90. Al-Mani", m: "The Withholder" },
-            { ar: "الضَّارُّ", en: "91. Ad-Darr", m: "The Distresser" },
-            { ar: "النَّافِعُ", en: "92. An-Nafi", m: "The Propitator" },
-            { ar: "النُّورُ", en: "93. An-Noor", m: "The Light" },
-            { ar: "الْهَادِي", en: "94. Al-Hadi", m: "The Guide" },
-            { ar: "الْبَدِيعُ", en: "95. Al-Badi", m: "The Incomparable Originator" },
-            { ar: "الْبَاقِي", en: "96. Al-Baqi", m: "The Everlasting" },
-            { ar: "الْوَارِثُ", en: "97. Al-Warith", m: "The Inheritor" },
-            { ar: "الرَّشِيدُ", en: "98. Ar-Rasheed", m: "The Guide to Right Path" },
-            { ar: "الصَّبُورُ", en: "99. As-Saboor", m: "The Patient" }
-        ];
-
-        const container = document.getElementById('namesContainer');
-        full99Names.forEach(n => {
-            container.innerHTML += `
-                <div class="name-card">
-                    <div style="color:#ffd700; font-size:1.2rem;">${n.ar}</div>
-                    <div style="font-weight:bold; font-size:0.82rem;">${n.en}</div>
-                    <div style="font-size:0.7rem; color:#aaa;">${n.m}</div>
-                </div>`;
-        });
-
-        // Date Display
-        const options = { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' };
-        document.getElementById('gregorianDate').innerText = new Date().toLocaleDateString('en-GB', options);
-    </script>
-</body>
-</html>
+            <div style="text-align: center;">
+                <div style="font-weight:700;">Qibla Compass</div>
+                <button class="btn-action" style="width:100%; margin:10px 0;" onclick="enableCompassSensor()">🧭 Enable iPho
