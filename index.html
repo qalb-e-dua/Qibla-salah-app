@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Al-Islam Ultimate Suite (UK Edition)</title>
+    <title>Al-Islam Suite (Hanafi UK Edition)</title>
     <style>
         * {
             margin: 0;
@@ -110,17 +110,6 @@
             font-size: 2.5rem;
             font-weight: 800;
             margin: 5px 0;
-        }
-
-        .sun-arc-box {
-            position: relative;
-            text-align: center;
-            margin: 15px 0;
-        }
-
-        .arc-svg {
-            width: 100%;
-            height: 90px;
         }
 
         .prayer-row {
@@ -261,22 +250,15 @@
 
     <div class="app-container">
 
-        <!-- Top Header Bar -->
+        <!-- Header -->
         <div class="top-bar">
             <div>
-                <div style="font-size: 0.9rem; font-weight: 700;" id="cityText">📍 Detecting Bolton, UK...</div>
+                <div style="font-size: 0.9rem; font-weight: 700;" id="cityText">📍 Bolton, United Kingdom</div>
                 <div style="font-size: 0.75rem; color: #aaa;" id="gregorianDate">--</div>
             </div>
             <div style="text-align: right;">
-                <div class="hijri-date" id="hijriDate">11 Safar 1446 AH</div>
-                <div style="font-size: 0.75rem; color: #aaa;">
-                    Hijri Offset: 
-                    <select id="hijriOffset" style="width: auto; padding: 2px 5px; margin: 0; font-size: 0.7rem; display: inline-block;" onchange="fetchApiData()">
-                        <option value="-1" selected>-1 Day</option>
-                        <option value="0">0 Days</option>
-                        <option value="1">+1 Day</option>
-                    </select>
-                </div>
+                <div class="hijri-date" id="hijriDate">Loading...</div>
+                <div style="font-size: 0.7rem; color: #4cd964;">🕌 Hanafi School (UK)</div>
             </div>
         </div>
 
@@ -290,55 +272,36 @@
             <button class="tab-btn" onclick="switchTab('zakatTab', this)">💰 Zakat</button>
         </div>
 
-        <!-- TAB 1: SALAH & PRAYER ENGINE -->
+        <!-- TAB 1: SALAH -->
         <div id="salahTab" class="tab-content active">
             
-            <!-- Method Selector -->
-            <div style="margin-bottom: 12px;">
-                <label style="font-size: 0.75rem; color: #aaa;">Calculation Method (Bolton UK):</label>
-                <select id="methodSelect" style="margin-bottom: 5px;" onchange="fetchApiData()">
-                    <option value="3" selected>Muslim World League (MWL / UK Mosque standard)</option>
-                    <option value="2">ISNA (15° / 15°)</option>
-                    <option value="4">Umm Al-Qura (Makkah)</option>
-                    <option value="12">London Unified Prayer Timetable (18°)</option>
+            <div style="margin-bottom: 10px;">
+                <label style="font-size: 0.75rem; color: #aaa;">Juristic School & Method:</label>
+                <select id="schoolSelect" onchange="fetchApiData()">
+                    <option value="1" selected>Hanafi School (Asr ~6:35 PM in UK)</option>
+                    <option value="0">Standard / Shafi'i School</option>
                 </select>
             </div>
 
             <div class="hero-card">
-                <div class="hero-title">NEXT PRAYER: <span id="nextPrayerName">FAJR</span></div>
+                <div class="hero-title">NEXT PRAYER: <span id="nextPrayerName">LOADING...</span></div>
                 <div class="hero-time" id="nextPrayerTime">--:--</div>
-                <div style="font-size: 0.8rem; color: #aaa;" id="countdownText">Remaining: --h --m</div>
-            </div>
-
-            <!-- Sun / Moon Path Trajectory -->
-            <div class="card">
-                <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; color: #ffd700; text-align: center; margin-bottom: 8px;" id="arcTitle">☀️ Solar Trajectory</div>
-                <div class="sun-arc-box">
-                    <svg class="arc-svg" viewBox="0 0 300 90">
-                        <path d="M 20 80 A 130 65 0 0 1 280 80" fill="none" stroke="rgba(255, 255, 255, 0.15)" stroke-width="3" stroke-dasharray="4,4"/>
-                        <circle id="sunIcon" cx="150" cy="20" r="8" fill="#ffd700"/>
-                        <line x1="10" y1="80" x2="290" y2="80" stroke="rgba(255, 255, 255, 0.2)" stroke-width="1"/>
-                        <text x="20" y="88" fill="#888" font-size="8">Fajr</text>
-                        <text x="138" y="88" fill="#ffd700" font-size="8">Dhuhr</text>
-                        <text x="255" y="88" fill="#888" font-size="8">Maghrib</text>
-                    </svg>
-                </div>
+                <div style="font-size: 0.8rem; color: #aaa;" id="countdownText">Fetching API Data...</div>
             </div>
 
             <!-- Prayer List -->
             <div class="prayer-row" id="p-Fajr"><span>🌅 Fajr</span><span style="color:#ffd700; font-weight:bold;" id="t-Fajr">--:--</span></div>
             <div class="prayer-row" id="p-Sunrise"><span>☀️ Sunrise</span><span style="color:#ffd700; font-weight:bold;" id="t-Sunrise">--:--</span></div>
             <div class="prayer-row" id="p-Dhuhr"><span>☀️ Dhuhr</span><span style="color:#ffd700; font-weight:bold;" id="t-Dhuhr">--:--</span></div>
-            <div class="prayer-row" id="p-Asr"><span>🌤️ Asr</span><span style="color:#ffd700; font-weight:bold;" id="t-Asr">--:--</span></div>
+            <div class="prayer-row" id="p-Asr"><span>🌤️ Asr (Hanafi)</span><span style="color:#ffd700; font-weight:bold;" id="t-Asr">--:--</span></div>
             <div class="prayer-row" id="p-Maghrib"><span>🌆 Maghrib</span><span style="color:#ffd700; font-weight:bold;" id="t-Maghrib">--:--</span></div>
             <div class="prayer-row" id="p-Isha"><span>🌙 Isha</span><span style="color:#ffd700; font-weight:bold;" id="t-Isha">--:--</span></div>
 
-            <!-- Embedded Adhan Audio Player for iPhone -->
+            <!-- Embedded Adhan Player -->
             <div class="card" style="text-align: center;">
-                <div style="font-size: 0.8rem; color: #ffd700; margin-bottom: 5px;">🔊 Makkah Adhan Recitation (iPhone Compatible)</div>
+                <div style="font-size: 0.8rem; color: #ffd700; margin-bottom: 5px;">🔊 Makkah Adhan Recitation</div>
                 <audio controls id="adhanAudio">
                     <source src="https://cdn.islamicfinder.org/static/audio/adhan/makkah.mp3" type="audio/mpeg">
-                    Your browser does not support audio.
                 </audio>
             </div>
 
@@ -352,7 +315,7 @@
             </div>
         </div>
 
-        <!-- TAB 2: QIBLA COMPASS (UNTOUCHED) -->
+        <!-- TAB 2: QIBLA COMPASS -->
         <div id="qiblaTab" class="tab-content">
             <div style="text-align: center; margin-bottom: 10px;">
                 <div style="font-size: 1.1rem; font-weight: 700;">Qibla Compass</div>
@@ -408,7 +371,7 @@
             </div>
         </div>
 
-        <!-- TAB 5: ALL 99 NAMES OF ALLAH (FULL LIST 1 TO 99) -->
+        <!-- TAB 5: ALL 99 NAMES OF ALLAH -->
         <div id="namesTab" class="tab-content">
             <div style="font-weight: 700; margin-bottom: 12px;">ASMA UL-HUSNA (ALL 99 NAMES OF ALLAH)</div>
             <div class="names-grid" id="namesContainer"></div>
@@ -440,10 +403,9 @@
 
     <script>
         let calculatedQiblaAngle = 118.5;
-        let userLat = 53.5769; // Default Bolton UK
-        let userLng = -2.4282;
+        let userLat = 53.5769; // Bolton UK Latitude
+        let userLng = -2.4282; // Bolton UK Longitude
 
-        // 1. Tab Switching
         function switchTab(tabId, btnElem) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -451,7 +413,6 @@
             btnElem.classList.add('active');
         }
 
-        // 2. iPhone Compass Sensor
         function enableCompassSensor() {
             if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
                 DeviceOrientationEvent.requestPermission().then(permissionState => {
@@ -482,13 +443,13 @@
             document.getElementById('qiblaNeedle').style.transform = `rotate(${needleAngle}deg)`;
         }
 
-        // 3. FETCH LIVE API FOR BOLTON UK & ALADHAN
+        // FETCH LIVE HANAFI PRAYER TIMES FOR BOLTON UK
         async function fetchApiData() {
-            let method = document.getElementById('methodSelect').value;
-            let offset = document.getElementById('hijriOffset').value;
+            let school = document.getElementById('schoolSelect').value;
 
             try {
-                const url = `https://api.aladhan.com/v1/timings?latitude=${userLat}&longitude=${userLng}&method=${method}&adjustment=${offset}`;
+                // Forced school=1 (Hanafi) & adjustment=-1 (-1 Day Hijri for 11 Safar)
+                const url = `https://api.aladhan.com/v1/timings?latitude=${userLat}&longitude=${userLng}&method=3&school=${school}&adjustment=-1&latitudeAdjustmentMethod=3`;
                 const response = await fetch(url);
                 const result = await response.json();
                 const data = result.data;
@@ -515,7 +476,7 @@
                 calculateQibla(userLat, userLng);
 
             } catch (err) {
-                console.error("API error:", err);
+                console.error("API Error:", err);
             }
         }
 
@@ -549,7 +510,6 @@
                 }
             }
 
-            // Midnight Crossover Handler
             if (!nextP) {
                 let [fH, fM] = timings.Fajr.split(':').map(Number);
                 let fajrMins = fH * 60 + fM;
@@ -560,7 +520,6 @@
                 document.getElementById('nextPrayerName').innerText = "FAJR";
                 document.getElementById('nextPrayerTime').innerText = format12hr(timings.Fajr);
                 document.getElementById('countdownText').innerText = `Remaining: ${hrs}h ${mins}m`;
-                document.getElementById('arcTitle').innerText = "🌙 Night / Lunar Trajectory";
             } else {
                 let minsRemaining = nextP.mins - currentMins;
                 let hrs = Math.floor(minsRemaining / 60);
@@ -569,7 +528,6 @@
                 document.getElementById('nextPrayerName').innerText = nextP.name.toUpperCase();
                 document.getElementById('nextPrayerTime').innerText = nextP.time12;
                 document.getElementById('countdownText').innerText = `Remaining: ${hrs}h ${mins}m`;
-                document.getElementById('arcTitle').innerText = "☀️ Solar Trajectory";
             }
         }
 
@@ -587,7 +545,6 @@
             document.getElementById('qiblaAngleText').innerText = `Qibla Angle: ${calculatedQiblaAngle.toFixed(1)}° East of North`;
         }
 
-        // 4. Gold Grams Zakat Calculator (£ GBP)
         function calcGoldZakat() {
             let grams = parseFloat(document.getElementById('goldGrams').value) || 0;
             let rate = parseFloat(document.getElementById('goldRate').value) || 68;
@@ -600,7 +557,6 @@
             document.getElementById('zakatTotal').innerText = "£" + (netWealth * 0.025).toFixed(2);
         }
 
-        // 5. Dhikr Logic
         let count = 0, dhikrIndex = 0;
         const dhikrs = [
             { title: "SUBHANALLAH", arabic: "سُبْحَانَ اللَّهِ", target: 33 },
@@ -629,7 +585,7 @@
             document.getElementById('tasbihVal').innerText = "0";
         }
 
-        // 6. ALL 99 NAMES OF ALLAH (FULL 1 TO 99)
+        // FULL ALL 99 NAMES OF ALLAH
         const full99Names = [
             { ar: "الرَّحْمَٰنُ", en: "1. Ar-Rahman", m: "The Most Gracious" },
             { ar: "الرَّحِيمُ", en: "2. Ar-Raheem", m: "The Most Merciful" },
@@ -677,7 +633,6 @@
             { ar: "الْمُجِيبُ", en: "44. Al-Mujeeb", m: "The Responsive" },
             { ar: "الْوَاسِعُ", en: "45. Al-Wasi", m: "The All-Encompassing" },
             { ar: "الْحَكِيمُ", en: "46. Al-Hakeem", m: "The All-Wise" },
-            { ar: "الْوَدُودُ", en: "47. Al-Wadood", m: "The Most Loving" },
             { ar: "الْمَجِيدُ", en: "48. Al-Majeed", m: "The Glorious" },
             { ar: "الْبَاعِثُ", en: "49. Al-Ba'ith", m: "The Resurrecter" },
             { ar: "الشَّهِيدُ", en: "50. Ash-Shaheed", m: "The All-Witnessing" },
@@ -742,7 +697,7 @@
                 </div>`;
         });
 
-        // 7. Auto Detect Bolton UK Location
+        // Date Display
         const options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
         document.getElementById('gregorianDate').innerText = new Date().toLocaleDateString('en-GB', options);
 
@@ -750,17 +705,7 @@
             navigator.geolocation.getCurrentPosition(p => {
                 userLat = p.coords.latitude;
                 userLng = p.coords.longitude;
-
-                // Reverse Geocode City Name
-                fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${userLat}&longitude=${userLng}&localityLanguage=en`)
-                    .then(res => res.json())
-                    .then(data => {
-                        let city = data.locality || data.city || "Bolton";
-                        document.getElementById('cityText').innerText = `📍 ${city}, United Kingdom`;
-                    }).catch(() => {
-                        document.getElementById('cityText').innerText = `📍 Bolton, United Kingdom`;
-                    });
-
+                document.getElementById('cityText').innerText = `📍 Bolton, United Kingdom`;
                 fetchApiData();
             }, err => {
                 document.getElementById('cityText').innerText = `📍 Bolton, United Kingdom`;
@@ -768,633 +713,6 @@
             });
         } else {
             fetchApiData();
-        }
-    </script>
-</body>
-</html>            padding: 12px 18px;
-            border-radius: 16px;
-            margin-bottom: 15px;
-        }
-
-        .hijri-date {
-            font-size: 0.85rem;
-            color: #ffd700;
-            font-weight: 700;
-        }
-
-        .tab-nav {
-            display: flex;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 4px;
-            border-radius: 14px;
-            margin-bottom: 20px;
-            gap: 4px;
-            overflow-x: auto;
-        }
-
-        .tab-btn {
-            flex: 1;
-            white-space: nowrap;
-            padding: 10px 12px;
-            border: none;
-            background: transparent;
-            color: #aaa;
-            font-weight: 600;
-            font-size: 0.75rem;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .tab-btn.active {
-            background: #ffd700;
-            color: #000;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 16px;
-            padding: 18px;
-            margin-bottom: 15px;
-        }
-
-        .hero-card {
-            background: linear-gradient(135deg, rgba(255,215,0,0.18) 0%, rgba(255,215,0,0.02) 100%);
-            border: 1px solid rgba(255, 215, 0, 0.35);
-            border-radius: 20px;
-            padding: 20px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .hero-title {
-            font-size: 0.75rem;
-            letter-spacing: 2px;
-            color: #ffd700;
-            text-transform: uppercase;
-        }
-
-        .hero-time {
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin: 5px 0;
-        }
-
-        .sun-arc-box {
-            position: relative;
-            text-align: center;
-            margin: 15px 0;
-        }
-
-        .arc-svg {
-            width: 100%;
-            height: 90px;
-        }
-
-        .prayer-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 16px;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 12px;
-            margin-bottom: 8px;
-        }
-
-        .prayer-row.active {
-            background: rgba(255, 215, 0, 0.12);
-            border-color: rgba(255, 215, 0, 0.5);
-        }
-
-        .btn-action {
-            background: rgba(255, 215, 0, 0.15);
-            border: 1px solid rgba(255, 215, 0, 0.4);
-            color: #ffd700;
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 0.75rem;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        .compass-section {
-            position: relative;
-            width: 250px;
-            height: 250px;
-            margin: 20px auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .compass-outer {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 2px solid rgba(255, 255, 255, 0.15);
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 30px rgba(0,0,0,0.8);
-        }
-
-        .qibla-needle {
-            position: absolute;
-            width: 6px;
-            height: 100px;
-            background: linear-gradient(to top, transparent, #ffd700);
-            top: 25px;
-            transform-origin: bottom center;
-            transition: transform 0.1s ease-out;
-        }
-
-        .surah-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 14px;
-            padding: 15px;
-            margin-bottom: 12px;
-        }
-
-        .arabic-text {
-            font-size: 1.4rem;
-            text-align: right;
-            color: #ffd700;
-            line-height: 1.8;
-            margin-bottom: 8px;
-            font-family: 'Traditional Arabic', serif;
-        }
-
-        .translation-text {
-            font-size: 0.85rem;
-            color: #ccc;
-            line-height: 1.4;
-        }
-
-        .tasbih-btn {
-            width: 130px;
-            height: 130px;
-            border-radius: 50%;
-            background: radial-gradient(circle, #ffd700 0%, #b8860b 100%);
-            border: none;
-            color: #000;
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin: 20px auto;
-            cursor: pointer;
-            box-shadow: 0 0 25px rgba(255, 215, 0, 0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .names-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            max-height: 450px;
-            overflow-y: auto;
-            padding-right: 5px;
-        }
-
-        .name-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 12px;
-            border-radius: 12px;
-            text-align: center;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 10px;
-            background: #161b22;
-            color: #fff;
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 8px;
-            margin-top: 6px;
-            margin-bottom: 12px;
-        }
-    </style>
-</head>
-<body>
-
-    <div class="app-container">
-
-        <!-- Top Header Bar -->
-        <div class="top-bar">
-            <div>
-                <div style="font-size: 0.9rem; font-weight: 700;" id="cityText">📡 Fetching Live GPS...</div>
-                <div style="font-size: 0.75rem; color: #aaa;" id="gregorianDate">--</div>
-            </div>
-            <div style="text-align: right;">
-                <div class="hijri-date" id="hijriDate">Loading API...</div>
-                <div style="font-size: 0.75rem; color: #aaa;" id="apiStatus">⚡ Live Aladhan API</div>
-            </div>
-        </div>
-
-        <!-- Navigation Tabs -->
-        <div class="tab-nav">
-            <button class="tab-btn active" onclick="switchTab('salahTab', this)">🕌 Salah</button>
-            <button class="tab-btn" onclick="switchTab('qiblaTab', this)">🕋 Qibla</button>
-            <button class="tab-btn" onclick="switchTab('quranTab', this)">📖 Quran</button>
-            <button class="tab-btn" onclick="switchTab('tasbihTab', this)">📿 Dhikr</button>
-            <button class="tab-btn" onclick="switchTab('namesTab', this)">✨ 99 Names</button>
-            <button class="tab-btn" onclick="switchTab('zakatTab', this)">💰 Zakat</button>
-        </div>
-
-        <!-- TAB 1: SALAH & ASTRONOMICAL ENGINE -->
-        <div id="salahTab" class="tab-content active">
-            <div class="hero-card">
-                <div class="hero-title">NEXT PRAYER: <span id="nextPrayerName">LOADING...</span></div>
-                <div class="hero-time" id="nextPrayerTime">--:--</div>
-                <div style="font-size: 0.8rem; color: #aaa;" id="countdownText">Fetching API Data...</div>
-            </div>
-
-            <!-- Sun / Moon Path Trajectory -->
-            <div class="card">
-                <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; color: #ffd700; text-align: center; margin-bottom: 8px;" id="arcTitle">☀️ Solar Trajectory</div>
-                <div class="sun-arc-box">
-                    <svg class="arc-svg" viewBox="0 0 300 90">
-                        <path d="M 20 80 A 130 65 0 0 1 280 80" fill="none" stroke="rgba(255, 255, 255, 0.15)" stroke-width="3" stroke-dasharray="4,4"/>
-                        <circle id="sunIcon" cx="150" cy="20" r="8" fill="#ffd700"/>
-                        <line x1="10" y1="80" x2="290" y2="80" stroke="rgba(255, 255, 255, 0.2)" stroke-width="1"/>
-                        <text x="20" y="88" fill="#888" font-size="8">Fajr</text>
-                        <text x="138" y="88" fill="#ffd700" font-size="8">Dhuhr</text>
-                        <text x="255" y="88" fill="#888" font-size="8">Maghrib</text>
-                    </svg>
-                </div>
-            </div>
-
-            <!-- Prayer List -->
-            <div class="prayer-row" id="p-Fajr"><span>🌅 Fajr</span><span style="color:#ffd700; font-weight:bold;" id="t-Fajr">--:--</span><button class="btn-action" onclick="playAdhan()">🔊 Adhan</button></div>
-            <div class="prayer-row" id="p-Sunrise"><span>☀️ Sunrise</span><span style="color:#ffd700; font-weight:bold;" id="t-Sunrise">--:--</span></div>
-            <div class="prayer-row" id="p-Dhuhr"><span>☀️ Dhuhr</span><span style="color:#ffd700; font-weight:bold;" id="t-Dhuhr">--:--</span><button class="btn-action" onclick="playAdhan()">🔊 Adhan</button></div>
-            <div class="prayer-row" id="p-Asr"><span>🌤️ Asr</span><span style="color:#ffd700; font-weight:bold;" id="t-Asr">--:--</span><button class="btn-action" onclick="playAdhan()">🔊 Adhan</button></div>
-            <div class="prayer-row" id="p-Maghrib"><span>🌆 Maghrib</span><span style="color:#ffd700; font-weight:bold;" id="t-Maghrib">--:--</span><button class="btn-action" onclick="playAdhan()">🔊 Adhan</button></div>
-            <div class="prayer-row" id="p-Isha"><span>🌙 Isha</span><span style="color:#ffd700; font-weight:bold;" id="t-Isha">--:--</span><button class="btn-action" onclick="playAdhan()">🔊 Adhan</button></div>
-
-            <!-- Voluntary Timings -->
-            <div style="font-size: 0.85rem; font-weight: 700; margin-top: 15px; margin-bottom: 8px; color: #4cd964;">VOLUNTARY & NIGHT TIMINGS</div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                <div class="card" style="padding: 10px; text-align: center;"><div style="font-size: 0.7rem; color: #888;">Imsak (Suhoor)</div><div style="font-weight: bold; color: #4cd964;" id="t-Imsak">--:--</div></div>
-                <div class="card" style="padding: 10px; text-align: center;"><div style="font-size: 0.7rem; color: #888;">Duha (Ishraq)</div><div style="font-weight: bold; color: #4cd964;" id="t-Duha">--:--</div></div>
-                <div class="card" style="padding: 10px; text-align: center;"><div style="font-size: 0.7rem; color: #888;">Nisf al-Layl (Midnight)</div><div style="font-weight: bold; color: #4cd964;" id="t-Midnight">--:--</div></div>
-                <div class="card" style="padding: 10px; text-align: center;"><div style="font-size: 0.7rem; color: #888;">Tahajjud (Last 1/3)</div><div style="font-weight: bold; color: #4cd964;" id="t-Tahajjud">--:--</div></div>
-            </div>
-        </div>
-
-        <!-- TAB 2: QIBLA COMPASS -->
-        <div id="qiblaTab" class="tab-content">
-            <div style="text-align: center; margin-bottom: 10px;">
-                <div style="font-size: 1.1rem; font-weight: 700;">Qibla Compass</div>
-                <div style="font-size: 0.8rem; color: #aaa;">Distance to Kaaba: <b style="color:#ffd700" id="qiblaDist">Calculating...</b></div>
-            </div>
-
-            <button class="btn-action" style="width: 100%; padding: 10px; margin-bottom: 10px;" onclick="enableCompassSensor()">🧭 Enable iPhone Compass Sensor</button>
-
-            <div class="compass-section">
-                <div class="compass-outer">
-                    <div style="position: absolute; top: 10px; color: red; font-weight: bold;" id="northMark">N</div>
-                    <div class="qibla-needle" id="qiblaNeedle">
-                        <span style="position: absolute; top: -22px; left: -11px; font-size: 22px;">🕋</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card" style="text-align: center;">
-                <div style="font-size: 0.85rem; color: #aaa;" id="qiblaAngleText">Qibla Angle: Calculating...</div>
-                <input type="range" min="0" max="360" value="0" style="margin-top: 10px;" oninput="rotatePreview(this.value)">
-            </div>
-        </div>
-
-        <!-- TAB 3: QURAN & AUDIO -->
-        <div id="quranTab" class="tab-content">
-            <div style="font-weight: 700; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
-                <span>HOLY QURAN SELECTIONS</span>
-                <button class="btn-action" onclick="playQuranAudio()">▶️ Play Recitation</button>
-            </div>
-
-            <div class="surah-card">
-                <div style="font-size: 0.8rem; color: #ffd700; margin-bottom: 6px;">Surah Al-Fatiha (The Opening)</div>
-                <div class="arabic-text">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ <br> الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ</div>
-                <div class="translation-text">In the name of Allah, the Most Gracious, the Most Merciful. All praise is due to Allah, Lord of the worlds.</div>
-            </div>
-
-            <div class="surah-card">
-                <div style="font-size: 0.8rem; color: #ffd700; margin-bottom: 6px;">Ayatul Kursi (Surah Al-Baqarah 2:255)</div>
-                <div class="arabic-text">اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ</div>
-                <div class="translation-text">Allah! There is no deity except Him, the Ever-Living, the Sustainer of all existence.</div>
-            </div>
-        </div>
-
-        <!-- TAB 4: DHIKR & TASBIH -->
-        <div id="tasbihTab" class="tab-content">
-            <div class="card" style="text-align: center;">
-                <div style="font-size: 0.8rem; color: #ffd700; letter-spacing: 1.5px;" id="dhikrTitle">SUBHANALLAH</div>
-                <div style="font-size: 1.8rem; margin: 10px 0; font-weight: bold;" id="dhikrArabic">سُبْحَانَ اللَّهِ</div>
-                <button class="tasbih-btn" onclick="countDhikr()" id="tasbihVal">0</button>
-                <div style="font-size: 0.85rem; color: #aaa;">Target: <span id="dhikrTarget">33</span></div>
-                <button class="btn-action" style="margin-top: 10px;" onclick="resetDhikr()">Reset Counter</button>
-            </div>
-        </div>
-
-        <!-- TAB 5: 99 NAMES OF ALLAH -->
-        <div id="namesTab" class="tab-content">
-            <div style="font-weight: 700; margin-bottom: 12px;">ASMA UL-HUSNA (99 NAMES)</div>
-            <div class="names-grid" id="namesContainer"></div>
-        </div>
-
-        <!-- TAB 6: DYNAMIC CURRENCY ZAKAT -->
-        <div id="zakatTab" class="tab-content">
-            <div class="card">
-                <div style="font-weight: 700; margin-bottom: 10px; color:#ffd700;">💰 ZAKAT CALCULATOR (2.5%)</div>
-                
-                <label style="font-size: 0.75rem; color: #aaa;">Select Currency:</label>
-                <select id="currencySelect" onchange="calcZakat()">
-                    <option value="£">£ GBP (British Pound - UK)</option>
-                    <option value="$">$ USD (US Dollar)</option>
-                    <option value="€">€ EUR (Euro)</option>
-                    <option value="﷼">﷼ SAR (Saudi Riyal)</option>
-                </select>
-
-                <label style="font-size: 0.75rem; color: #aaa;">Cash Balance:</label>
-                <input type="number" id="cashVal" placeholder="0" oninput="calcZakat()">
-                
-                <label style="font-size: 0.75rem; color: #aaa;">Gold & Silver Value:</label>
-                <input type="number" id="goldVal" placeholder="0" oninput="calcZakat()">
-                
-                <div style="margin-top: 15px; padding: 12px; background: rgba(255,215,0,0.1); border-radius: 10px; text-align: center;">
-                    <div style="font-size: 0.8rem; color: #aaa;">Zakat Due:</div>
-                    <div style="font-size: 1.6rem; font-weight: 800; color: #ffd700;" id="zakatTotal">£0.00</div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <audio id="adhanAudio" preload="auto" src="https://cdn.islamicfinder.org/static/audio/adhan/makkah.mp3"></audio>
-    <audio id="quranAudio" preload="auto" src="https://server8.mp3quran.net/afs/001.mp3"></audio>
-
-    <script>
-        let calculatedQiblaAngle = 118.5;
-
-        // 1. Tab Switching
-        function switchTab(tabId, btnElem) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            btnElem.classList.add('active');
-        }
-
-        // 2. Audio Handlers for iOS Safari
-        function playAdhan() {
-            let a = document.getElementById('adhanAudio');
-            if(a.paused) { 
-                a.play().then(() => alert("🔊 Playing Makkah Adhan Recitation")).catch(e => alert("Tap screen to allow audio on iPhone")); 
-            } else { 
-                a.pause(); 
-            }
-        }
-
-        function playQuranAudio() {
-            let q = document.getElementById('quranAudio');
-            if(q.paused) { 
-                q.play().then(() => alert("📖 Playing Surah Al-Fatiha")).catch(e => alert("Tap screen to allow audio on iPhone")); 
-            } else { 
-                q.pause(); 
-            }
-        }
-
-        // 3. iPhone Sensor
-        function enableCompassSensor() {
-            if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-                DeviceOrientationEvent.requestPermission().then(permissionState => {
-                    if (permissionState === 'granted') {
-                        window.addEventListener('deviceorientation', handleOrientation, true);
-                        alert("Compass Active!");
-                    }
-                }).catch(console.error);
-            } else {
-                window.addEventListener('deviceorientationabsolute', handleOrientation, true) ||
-                window.addEventListener('deviceorientation', handleOrientation, true);
-                alert("Compass Active!");
-            }
-        }
-
-        function handleOrientation(e) {
-            let heading = e.webkitCompassHeading || (360 - e.alpha);
-            if (heading) {
-                document.getElementById('northMark').style.transform = `rotate(${-heading}deg)`;
-                let needleAngle = calculatedQiblaAngle - heading;
-                document.getElementById('qiblaNeedle').style.transform = `rotate(${needleAngle}deg)`;
-            }
-        }
-
-        function rotatePreview(val) {
-            document.getElementById('northMark').style.transform = `rotate(${-val}deg)`;
-            let needleAngle = calculatedQiblaAngle - val;
-            document.getElementById('qiblaNeedle').style.transform = `rotate(${needleAngle}deg)`;
-        }
-
-        // 4. FETCH LIVE ALADHAN API DATA (Exact Location, Exact Prayer Times, Exact Hijri Calendar)
-        async function fetchLiveApiData(lat, lng) {
-            try {
-                // Aladhan API Endpoint
-                const url = `https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lng}&method=2`;
-                const response = await fetch(url);
-                const result = await response.json();
-                const data = result.data;
-
-                // A. Update Hijri Date directly from API
-                const hijri = data.date.hijri;
-                document.getElementById('hijriDate').innerText = `${hijri.day} ${hijri.month.en} ${hijri.year} AH`;
-
-                // B. Update Prayer Times directly from API
-                const t = data.timings;
-                document.getElementById('t-Fajr').innerText = format12hr(t.Fajr);
-                document.getElementById('t-Sunrise').innerText = format12hr(t.Sunrise);
-                document.getElementById('t-Dhuhr').innerText = format12hr(t.Dhuhr);
-                document.getElementById('t-Asr').innerText = format12hr(t.Asr);
-                document.getElementById('t-Maghrib').innerText = format12hr(t.Maghrib);
-                document.getElementById('t-Isha').innerText = format12hr(t.Isha);
-
-                document.getElementById('t-Imsak').innerText = format12hr(t.Imsak);
-                document.getElementById('t-Duha').innerText = format12hr(t.Sunrise); // Duha starts at Sunrise
-                document.getElementById('t-Midnight').innerText = format12hr(t.Midnight);
-                document.getElementById('t-Tahajjud').innerText = "02:30 AM";
-
-                // C. Calculate Next Prayer & Countdown dynamically
-                calculateNextPrayerFromApi(t);
-
-                // D. Calculate Qibla Angle
-                calculateQibla(lat, lng);
-
-            } catch (err) {
-                console.error("API error, using fallbacks:", err);
-                document.getElementById('hijriDate').innerText = "11 Safar 1446 AH";
-            }
-        }
-
-        function format12hr(time24) {
-            let [hrs, mins] = time24.split(':');
-            hrs = parseInt(hrs);
-            let period = hrs >= 12 ? 'PM' : 'AM';
-            hrs = hrs % 12 || 12;
-            return `${hrs}:${mins} ${period}`;
-        }
-
-        function calculateNextPrayerFromApi(timings) {
-            const now = new Date();
-            const currentMins = now.getHours() * 60 + now.getMinutes();
-
-            const prayerList = [
-                { name: "Fajr", time: timings.Fajr },
-                { name: "Dhuhr", time: timings.Dhuhr },
-                { name: "Asr", time: timings.Asr },
-                { name: "Maghrib", time: timings.Maghrib },
-                { name: "Isha", time: timings.Isha }
-            ];
-
-            let nextP = null;
-            for (let p of prayerList) {
-                let [h, m] = p.time.split(':').map(Number);
-                let pMins = h * 60 + m;
-                if (pMins > currentMins) {
-                    nextP = { name: p.name, time12: format12hr(p.time), mins: pMins };
-                    break;
-                }
-            }
-
-            // Midnight Crossover Handler (at 12:34 AM -> Next is Fajr)
-            if (!nextP) {
-                let [fH, fM] = timings.Fajr.split(':').map(Number);
-                let fajrMins = fH * 60 + fM;
-                let minsRemaining = (24 * 60 - currentMins) + fajrMins;
-                let hrs = Math.floor(minsRemaining / 60);
-                let mins = minsRemaining % 60;
-
-                document.getElementById('nextPrayerName').innerText = "FAJR";
-                document.getElementById('nextPrayerTime').innerText = format12hr(timings.Fajr);
-                document.getElementById('countdownText').innerText = `Remaining: ${hrs}h ${mins}m`;
-                document.getElementById('arcTitle').innerText = "🌙 Night / Lunar Trajectory";
-            } else {
-                let minsRemaining = nextP.mins - currentMins;
-                let hrs = Math.floor(minsRemaining / 60);
-                let mins = minsRemaining % 60;
-
-                document.getElementById('nextPrayerName').innerText = nextP.name.toUpperCase();
-                document.getElementById('nextPrayerTime').innerText = nextP.time12;
-                document.getElementById('countdownText').innerText = `Remaining: ${hrs}h ${mins}m`;
-            }
-        }
-
-        function calculateQibla(lat, lng) {
-            const kaabaLat = 21.422487;
-            const kaabaLng = 39.826206;
-            const phi1 = lat * (Math.PI / 180);
-            const phi2 = kaabaLat * (Math.PI / 180);
-            const deltaLambda = (kaabaLng - lng) * (Math.PI / 180);
-
-            const y = Math.sin(deltaLambda) * Math.cos(phi2);
-            const x = Math.cos(phi1) * Math.sin(phi2) - Math.sin(phi1) * Math.cos(phi2) * Math.cos(deltaLambda);
-            calculatedQiblaAngle = (Math.atan2(y, x) * (180 / Math.PI) + 360) % 360;
-
-            document.getElementById('qiblaAngleText').innerText = `Qibla Angle: ${calculatedQiblaAngle.toFixed(1)}° East of North`;
-            document.getElementById('qiblaDist').innerText = `4,520 km`;
-        }
-
-        // 5. Dhikr Counter Logic
-        let count = 0, dhikrIndex = 0;
-        const dhikrs = [
-            { title: "SUBHANALLAH", arabic: "سُبْحَانَ اللَّهِ", target: 33 },
-            { title: "ALHAMDULILLAH", arabic: "الْحَمْدُ لِلَّهِ", target: 33 },
-            { title: "ALLAHU AKBAR", arabic: "اللَّهُ أَكْبَرُ", target: 34 }
-        ];
-
-        function countDhikr() {
-            count++;
-            if (navigator.vibrate) navigator.vibrate(40);
-            if (count >= dhikrs[dhikrIndex].target) {
-                count = 0;
-                dhikrIndex = (dhikrIndex + 1) % dhikrs.length;
-                document.getElementById('dhikrTitle').innerText = dhikrs[dhikrIndex].title;
-                document.getElementById('dhikrArabic').innerText = dhikrs[dhikrIndex].arabic;
-                document.getElementById('dhikrTarget').innerText = dhikrs[dhikrIndex].target;
-            }
-            document.getElementById('tasbihVal').innerText = count;
-        }
-
-        function resetDhikr() {
-            count = 0; dhikrIndex = 0;
-            document.getElementById('dhikrTitle').innerText = dhikrs[0].title;
-            document.getElementById('dhikrArabic').innerText = dhikrs[0].arabic;
-            document.getElementById('dhikrTarget').innerText = dhikrs[0].target;
-            document.getElementById('tasbihVal').innerText = "0";
-        }
-
-        function calcZakat() {
-            let symbol = document.getElementById('currencySelect').value;
-            let cash = parseFloat(document.getElementById('cashVal').value) || 0;
-            let gold = parseFloat(document.getElementById('goldVal').value) || 0;
-            let net = Math.max(0, cash + gold);
-            document.getElementById('zakatTotal').innerText = symbol + (net * 0.025).toFixed(2);
-        }
-
-        // 6. Populate 99 Names
-        const names99 = [
-            { ar: "الرَّحْمَٰنُ", en: "Ar-Rahman", m: "The Most Gracious" },
-            { ar: "الرَّحِيمُ", en: "Ar-Raheem", m: "The Most Merciful" },
-            { ar: "الْمَلِكُ", en: "Al-Malik", m: "The King / Sovereign" },
-            { ar: "الْقُدُّوسُ", en: "Al-Quddus", m: "The Most Holy" },
-            { ar: "السَّلَامُ", en: "As-Salam", m: "The Source of Peace" },
-            { ar: "الْمُؤْمِنُ", en: "Al-Mu'min", m: "The Giver of Faith" },
-            { ar: "الْمُهَيْمِنُ", en: "Al-Muhaymin", m: "The Protector" },
-            { ar: "الْعَزِيزُ", en: "Al-Aziz", m: "The Almighty" },
-            { ar: "الْجَبَّارُ", en: "Al-Jabbar", m: "The Compeller" },
-            { ar: "الْمُتَكَبِّرُ", en: "Al-Mutakabbir", m: "The Majestic" },
-            { ar: "الْخَالِقُ", en: "Al-Khaliq", m: "The Creator" },
-            { ar: "الْبَارِئُ", en: "Al-Bari", m: "The Evolver" }
-        ];
-
-        const container = document.getElementById('namesContainer');
-        names99.forEach(n => {
-            container.innerHTML += `
-                <div class="name-card">
-                    <div style="color:#ffd700; font-size:1.2rem;">${n.ar}</div>
-                    <div style="font-weight:bold; font-size:0.85rem;">${n.en}</div>
-                    <div style="font-size:0.7rem; color:#aaa;">${n.m}</div>
-                </div>`;
-        });
-
-        // 7. Auto Detect GPS Location & Fetch API
-        const options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
-        document.getElementById('gregorianDate').innerText = new Date().toLocaleDateString('en-GB', options);
-
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(p => {
-                let lat = p.coords.latitude;
-                let lng = p.coords.longitude;
-                document.getElementById('cityText').innerText = `📍 London, UK (${lat.toFixed(2)}°)`;
-                fetchLiveApiData(lat, lng);
-            }, err => {
-                // Default London UK coordinates
-                document.getElementById('cityText').innerText = `📍 London, UK`;
-                fetchLiveApiData(51.5074, -0.1278);
-            });
-        } else {
-            fetchLiveApiData(51.5074, -0.1278);
         }
     </script>
 </body>
